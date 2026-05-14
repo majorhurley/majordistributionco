@@ -299,7 +299,6 @@ section{padding:7rem 5rem;}
   color:var(--white);margin-bottom:0.4rem;
 }
 .why-point p{font-size:0.85rem;color:var(--gray);line-height:1.7;}
-to{width:var(--w);}}
 
 /* ── PROCESS ── */
 .process{background:var(--black);border-top:0.5px solid rgba(0,0,0,0.1);}
@@ -1341,6 +1340,28 @@ footer {
   color: rgba(255,255,255,0.55);
 }
 /* ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── WHY SECTION BACKGROUND FIX ── */
+.why { background: rgba(255,255,255,0.92); }
+
+/* ── PROCESS STEP HOVER ── */
+.process-step:hover {
+  background: rgba(232,0,13,0.03);
+}
+
+/* ── REVEAL ANIMATION ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── HERO STAT ROW COLORS ── */
+.hero-stat-num { color: #E8000D !important; }
 </style>
 </head>
 <body>
@@ -1360,6 +1381,7 @@ footer {
     <li><a href="#work">Work</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
+  <a class="nav-cta" href="#contact">Get Started</a>
 </nav>
 
 <!-- HERO -->
@@ -1384,6 +1406,20 @@ footer {
   <div class="hero-actions">
     <a class="btn-primary" href="#contact">Get a Free Strategy Call</a>
     <a class="btn-ghost" href="#services">See Our Services</a>
+  </div>
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <div class="hero-stat-num">3×</div>
+      <div class="hero-stat-label">Avg. Engagement</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">48h</div>
+      <div class="hero-stat-label">Turnaround</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-num">100%</div>
+      <div class="hero-stat-label">Custom Creative</div>
+    </div>
   </div>
 </section>
 
@@ -1495,7 +1531,80 @@ footer {
   </div>
 </section>
 
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div>
+    <p class="section-tag reveal">How It Works</p>
+    <h2 class="section-heading reveal">FOUR STEPS TO <em>RESULTS</em></h2>
+  </div>
+  <div class="process-steps reveal">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <h3>Discovery</h3>
+      <p>We learn your brand, your market, and what's actually holding you back. No fluff — straight to what matters.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <h3>Strategy</h3>
+      <p>A custom plan built around your goals — the right channels, right message, right timing for your audience in the Central Valley.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <h3>Execute</h3>
+      <p>We shoot the content, launch the ads, and build the pages. Fast turnaround, no back-and-forth delays.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <h3>Grow</h3>
+      <p>We track results, optimize what's working, and keep pushing. Monthly reports. A partner invested in your growth.</p>
+    </div>
+  </div>
+</section>
+
 <!-- WHY US -->
+<section class="why" id="why">
+  <div class="services-intro">
+    <div>
+      <p class="section-tag reveal">Why Us</p>
+      <h2 class="section-heading reveal">WE'RE IN YOUR <em>CORNER</em></h2>
+    </div>
+    <p class="reveal">Most agencies are too big to care about a business your size. We're not. We're built for businesses in Fresno, Clovis, and the Central Valley — and we work like your growth is our growth.</p>
+  </div>
+  <div class="why-grid reveal">
+    <div class="why-points">
+      <div class="why-point">
+        <div class="why-icon">⚡</div>
+        <div>
+          <h4>Fast Turnaround</h4>
+          <p>48-hour delivery on most content. No waiting weeks for a simple edit or a social post.</p>
+        </div>
+      </div>
+      <div class="why-point">
+        <div class="why-icon">📍</div>
+        <div>
+          <h4>Local Market Knowledge</h4>
+          <p>We know Fresno, Clovis, Visalia, and the Valley. We understand your customers because they're our neighbors.</p>
+        </div>
+      </div>
+      <div class="why-point">
+        <div class="why-icon">💰</div>
+        <div>
+          <h4>Agency Quality, Local Pricing</h4>
+          <p>Professional results without the big-agency overhead. You get more for your dollar — and results you can see.</p>
+        </div>
+      </div>
+      <div class="why-point">
+        <div class="why-icon">🤝</div>
+        <div>
+          <h4>One Point of Contact</h4>
+          <p>No getting passed around. You work directly with us — the people doing the actual work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUR WORK -->
 <section class="work" id="work">
   <p class="section-tag reveal">Our Work</p>
   <h2 class="section-heading reveal">REAL BRANDS.<br/><em>REAL RESULTS.</em></h2>
@@ -1550,10 +1659,13 @@ footer {
 
 
 
-<!-- PROCESS -->
-
-
-<!-- FOOTER -->
+<!-- CTA BANNER -->
+<section class="cta-section">
+  <p class="section-tag">Ready?</p>
+  <h2>LET'S BUILD<br/>SOMETHING.</h2>
+  <p class="cta-slogan">They can't buy what they can't see.</p>
+  <a class="btn-dark" href="#contact">Get a Free Strategy Call</a>
+</section>
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
@@ -1615,7 +1727,7 @@ footer {
         font-family="'Bebas Neue',Impact,sans-serif" font-size="40" font-weight="900" fill="#E8000D">MAJOR DISTRIBUTION</text>
     </svg>
   </div>
-  <p class="footer-copy">© 2025 Major Distribution. All rights reserved.</p>
+  <p class="footer-copy">© <span id="copy-year">2026</span> Major Distribution. All rights reserved.</p>
   <ul class="footer-links">
     <li><a href="#services">Services</a></li>
     <li><a href="#work">Work</a></li>
@@ -1648,7 +1760,7 @@ window.addEventListener('scroll', () => {
 
 // Form submit
 document.querySelector('.contact-form').addEventListener('submit', function(e) {
-  const btn = this.querySelector('.form-submit');
+  const btn = this.querySelector('.btn-submit');
   btn.textContent = 'Sending...';
   btn.style.opacity = '0.7';
   btn.disabled = true;
