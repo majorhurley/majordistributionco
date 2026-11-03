@@ -350,6 +350,7 @@
   function autoplay(on) {
     on =
       on &&
+      !tall.matches && // phones: per-piece, below
       FX &&
       !saveData &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -363,6 +364,30 @@
       }
     });
   }
+  // Phones: every video piece plays, muted, while it is on screen, and
+  // pauses when it scrolls away (the field is several screens tall).
+  var phoneVids = tiles.filter(function (t) {
+    return !t.classList.contains("echo") && t.dataset.type === "video";
+  });
+  var phoneObs =
+    "IntersectionObserver" in window &&
+    new IntersectionObserver(
+      function (es) {
+        if (!tall.matches) return; // computers: the near-level autoplay below
+        es.forEach(function (en) {
+          var ok =
+            en.isIntersecting && FX && !saveData &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (ok) play(en.target);
+          else {
+            var v = en.target.querySelector("video");
+            if (v) v.pause();
+          }
+        });
+      },
+      { threshold: 0.5 },
+    );
+  if (phoneObs) phoneVids.forEach(function (t) { phoneObs.observe(t); });
   if ("IntersectionObserver" in window && autos.length)
     new IntersectionObserver(
       function (es) {
@@ -506,15 +531,42 @@
       lbStage.textContent = "";
       if (lb.open) lb.close();
     };
-    lib.addEventListener("click", function (e) {
-      var t = e.target.closest(".st");
-      if (!t || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    var open = function (t) {
       if (t.classList.contains("echo")) t = pieces[+t.dataset.of]; // a still opens its video
-      e.preventDefault();
       unlook(t);
       opener = t;
       show(t);
       lb.showModal();
+    };
+    lib.addEventListener("click", function (e) {
+      var t = e.target.closest(".st");
+      if (!t || e.metaKey || e.ctrlKey || e.shiftKey) return;
+      e.preventDefault();
+      open(t);
+    });
+    // Phones: the pieces sit in a moving 3D space, and mobile Safari's
+    // hit-testing there is unreliable, so the pieces take no taps (home.css)
+    // and the stage finds the piece under the finger itself, nearest first,
+    // with a little slack around small pieces.
+    stage.addEventListener("click", function (e) {
+      if (!FX || !tall.matches || e.target.closest(".lib-c, .peek")) return;
+      var hit = null,
+        best = -Infinity,
+        x = e.clientX,
+        y = e.clientY;
+      tiles.forEach(function (t) {
+        if (t.offsetParent === null) return; // hidden (echoes on phones)
+        var r = t.getBoundingClientRect(),
+          pad = 8,
+          z = parseFloat(t.style.getPropertyValue("--pz")) || 0;
+        if (x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad && z > best) {
+          best = z;
+          hit = t;
+        }
+      });
+      if (!hit) return;
+      e.preventDefault();
+      open(hit);
     });
     document.getElementById("lb-close").addEventListener("click", close);
     document.getElementById("lb-prev").addEventListener("click", function () {

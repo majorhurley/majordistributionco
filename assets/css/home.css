@@ -230,6 +230,9 @@ p.lib-c { cursor: default; }
   .fx .stage { perspective-origin: 50% var(--poy, 50%); }
   .st { left: var(--px); top: var(--py); width: var(--pw); transform-origin: 50% 50%; transform: scale(var(--ps, 1)); }
   .fx .st { transform: translateZ(var(--pz, 0px)); }
+  /* Taps go to the stage (home.js finds the piece), not 3D hit-testing. */
+  .fx .lib .st { pointer-events: none; }
+  .fx .stage { cursor: pointer; }
   .st.echo { display: none; }
   /* The title sits in the middle of the first screen; the corner labels
      stay with the top and bottom of the field. */

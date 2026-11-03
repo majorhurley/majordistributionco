@@ -190,10 +190,10 @@ const LAND = layout({ W: 175, H: 100, inset: [9, 7, 9, 9], title: [44, 11], cove
 // with the screen, so near and far planes slide past each other as you
 // scroll; with JS off each piece is scaled flat to the same spot.
 // The title sits in the middle of the first screen (~1.9 widths tall).
-const PHONE_H = 520;
-const PHONE_ZK = 0.6; // phones: depth compressed, so the scroll parallax stays gentle
+const PHONE_H = 430;
+const PHONE_ZK = 0.45; // phones: depth compressed, so the scroll parallax stays gentle
 const real = nodes.filter((n) => !n.echo);
-const portList = layout({ W: 100, H: PHONE_H, inset: [5, 22, 5, 14], title: [74, 16], tc: [50, 92], cover: 0.38, seed: 1102, gap: 5, list: real, zk: PHONE_ZK, slide: 70, ds: (z) => 0.7 + (0.3 * (z - Z_FAR)) / (Z_NEAR - Z_FAR), flatY: true, gatherY: (92 / PHONE_H) * 100 });
+const portList = layout({ W: 100, H: PHONE_H, inset: [3, 7, 3, 13], title: [66, 13], tc: [50, 92], cover: 0.56, seed: 1102, gap: 3, list: real, zk: PHONE_ZK, slide: 40, ds: (z) => 0.7 + (0.3 * (z - Z_FAR)) / (Z_NEAR - Z_FAR), flatY: true, gatherY: (92 / PHONE_H) * 100 });
 const PORT = nodes.map((n) => (n.echo ? null : portList[real.indexOf(n)]));
 
 const f2 = (n) => n.toFixed(2);
