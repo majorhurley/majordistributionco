@@ -156,6 +156,7 @@
         "--poy",
         ((innerHeight + 77) / 2 - stage.getBoundingClientRect().top).toFixed(1) + "px"
       );
+    if (phoneVideos) phoneVideos();
     if (M.drift) {
       // Against the cursor: point right, the field slides left.
       lib.style.setProperty("--dx", (-cur.dx * DRIFT * M.sw).toFixed(1) + "px");
@@ -167,6 +168,7 @@
   }
 
   var tall = window.matchMedia("(max-aspect-ratio: 1/1)");
+  var phoneVideos = function () {}; // set with the autoplay code below
   var raf = 0,
     last = 0;
   function frame(ts) {
@@ -364,30 +366,33 @@
       }
     });
   }
-  // Phones: every video piece plays, muted, while it is on screen, and
-  // pauses when it scrolls away (the field is several screens tall).
+  // Phones: every video piece plays, muted, while at least half of it is on
+  // screen, and pauses when it scrolls away (the field is several screens
+  // tall). Checked from the scroll frame (paint) with plain rects: WebKit's
+  // IntersectionObserver misses pieces inside the 3D space.
   var phoneVids = tiles.filter(function (t) {
     return !t.classList.contains("echo") && t.dataset.type === "video";
   });
-  var phoneObs =
-    "IntersectionObserver" in window &&
-    new IntersectionObserver(
-      function (es) {
-        if (!tall.matches) return; // computers: the near-level autoplay below
-        es.forEach(function (en) {
-          var ok =
-            en.isIntersecting && FX && !saveData &&
-            !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          if (ok) play(en.target);
-          else {
-            var v = en.target.querySelector("video");
-            if (v) v.pause();
-          }
-        });
-      },
-      { threshold: 0.5 },
-    );
-  if (phoneObs) phoneVids.forEach(function (t) { phoneObs.observe(t); });
+  var stillQ = window.matchMedia("(prefers-reduced-motion: reduce)");
+  phoneVideos = function () {
+    if (!tall.matches || !FX) return;
+    var top = 77,
+      bot = innerHeight,
+      allow = !saveData && !stillQ.matches;
+    phoneVids.forEach(function (t) {
+      var r = t.getBoundingClientRect(),
+        vis = r.height ? (Math.min(r.bottom, bot) - Math.max(r.top, top)) / r.height : 0,
+        on = allow && vis > 0.5;
+      if (on === !!t._on) return;
+      t._on = on;
+      if (on) play(t);
+      else {
+        var v = t.querySelector("video");
+        if (v) v.pause();
+      }
+    });
+  };
+  phoneVideos();
   if ("IntersectionObserver" in window && autos.length)
     new IntersectionObserver(
       function (es) {
