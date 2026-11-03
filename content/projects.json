@@ -1,0 +1,215 @@
+{
+ "_doc": "Project copy for /resume and /work. Media comes from media/manifest.json (built by ~/.claude/major-distributions/portfolio/build_media.py). Every claim here must be true and checkable: no invented metrics. `personal: true` = own photography, not a client: shown with the work but left out of every brand count.",
+ "projects": [
+  {
+   "id": "golden-vision",
+   "client": "Golden Vision Barbershop",
+   "where": "Santa Ana & Tustin, CA",
+   "when": "Oct 2026",
+   "status": "Delivered",
+   "headline": "A run of Meta Reels ads for two barbershop locations.",
+   "did": [
+    "Shot on the floor at both shops: cuts, transformations, barbers talking to camera",
+    "Cut each ad to a 17–28 second vertical with captions held clear of the Reels UI",
+    "Built first-time-client offer graphics ($35 Santa Ana, $45 Tustin)",
+    "Cleaned dialogue off the shop's background music with stem separation, then scored with licensed tracks"
+   ],
+   "tags": [
+    "Meta ads",
+    "Shoot",
+    "Edit",
+    "Offer design"
+   ]
+  },
+  {
+   "id": "mad-duck",
+   "client": "Mad Duck Craft Brewing",
+   "where": "",
+   "when": "May – Sep 2026",
+   "status": "Managed account",
+   "headline": "Instagram management, product photography, a canning-day commercial and the social cuts around it.",
+   "did": [
+    "Managed the @madduckcraft Instagram (9.3K followers) and built its performance reporting",
+    "Location product shoot across hills, river and gorge, edited into a post-ready rollout set",
+    "Canning-line commercial plus short cutdowns for TikTok and Reels",
+    "A 12-post TikTok and Reels plan with hooks, captions and shot notes",
+    "Pop ads in vertical and 16:9, and post and story designs built as code"
+   ],
+   "tags": [
+    "Instagram",
+    "Photography",
+    "Video",
+    "Social",
+    "Design"
+   ],
+   "url": "https://www.instagram.com/madduckcraft/",
+   "url_label": "@madduckcraft"
+  },
+  {
+   "id": "cafe-wang",
+   "client": "Cafe Wang",
+   "where": "La Verne, CA",
+   "when": "May 2026",
+   "status": "Signed client",
+   "headline": "Instagram content and management for a Chinese fusion restaurant, opened with a promo film.",
+   "did": [
+    "Major Distribution's first signed client",
+    "Monthly Instagram engagement: two original pieces a week across Reels, static posts and carousels",
+    "Captions, hashtags and a weekly posting calendar for every piece",
+    "4K promo film shot in the restaurant: the wok, the plates, the room, the storefront",
+    "Logo cleanup for print and screen"
+   ],
+   "tags": [
+    "Instagram",
+    "Content",
+    "Video",
+    "Brand"
+   ]
+  },
+  {
+   "id": "amor",
+   "client": "Amor",
+   "where": "Los Angeles, CA",
+   "when": "Jul – Oct 2026",
+   "status": "Live",
+   "url": "https://shopamorla.com",
+   "headline": "An online store built from nothing to live and taking real card payments.",
+   "did": [
+    "Storefront, product pages and mobile checkout with live Stripe payments",
+    "Email capture with confirmation flow and a welcome-offer popup",
+    "Seller tools: order admin, fulfilment and shipping board, label and tracking flow",
+    "Security headers, SEO pass and launch audit before go-live"
+   ],
+   "tags": [
+    "E-commerce",
+    "Web build",
+    "Payments",
+    "SEO"
+   ]
+  },
+  {
+   "id": "peacepal",
+   "client": "PeacePal",
+   "where": "",
+   "when": "Spring 2026",
+   "status": "",
+   "headline": "Americana product photography.",
+   "did": [
+    "Studio product shoot against a flag backdrop",
+    "Clean-background product shots",
+    "Wordmark and a product graphic built on it"
+   ],
+   "tags": [
+    "Photography",
+    "Brand"
+   ]
+  },
+  {
+   "id": "ulv-football",
+   "client": "University of La Verne Football",
+   "where": "La Verne, CA",
+   "when": "Fall 2025",
+   "status": "",
+   "headline": "Game-day sideline photography.",
+   "did": [
+    "Sideline and warm-up photography at a home game"
+   ],
+   "tags": [
+    "Photography",
+    "Sports"
+   ]
+  },
+  {
+   "id": "photography",
+   "client": "Photography",
+   "where": "",
+   "when": "",
+   "status": "",
+   "headline": "Portrait photography.",
+   "did": [
+    "Shot and edited by Major Hurley"
+   ],
+   "tags": [
+    "Photography"
+   ],
+   "personal": true
+  },
+  {
+   "id": "tonys",
+   "client": "Tony's Auto Glass",
+   "where": "Kern County, CA",
+   "when": "Sep 2026",
+   "status": "Demo build",
+   "headline": "A site built around one idea: the page is laminated glass.",
+   "did": [
+    "A crack that draws itself across the hero, a scroll-driven wiper, services as a spec sheet",
+    "Quote and call actions first on every screen, measured at 320–430px"
+   ],
+   "tags": [
+    "Web design",
+    "Web build"
+   ]
+  },
+  {
+   "id": "antelope",
+   "client": "Antelope Tires & Smog",
+   "where": "Antelope, CA",
+   "when": "Sep 2026",
+   "status": "Demo build",
+   "headline": "A clean local-shop site with the phone number where the thumb is.",
+   "did": [
+    "Real shop photography, open-now status, review count and map",
+    "SEO groundwork: structured data, generated sitemap, FAQ"
+   ],
+   "tags": [
+    "Web design",
+    "Local SEO"
+   ]
+  },
+  {
+   "id": "freshturn",
+   "client": "FreshTurn Property",
+   "where": "Sacramento County, CA",
+   "when": "Sep 2026",
+   "status": "Demo build",
+   "headline": "A six-page site for an apartment-turnover cleaning company.",
+   "did": [
+    "Booking, pricing and FAQ pages",
+    "Scroll motion and cursor-aware buttons"
+   ],
+   "tags": [
+    "Web design",
+    "Web build"
+   ]
+  },
+  {
+   "id": "rivera",
+   "client": "Rivera Plumbing & Rooter",
+   "where": "Lake Elsinore, CA",
+   "when": "Sep 2026",
+   "status": "Demo build",
+   "headline": "A redesign that puts Book and Quote ahead of everything else.",
+   "did": [
+    "Booking and quote as the two largest things on screen",
+    "A bottom dock keeps them in reach on phones"
+   ],
+   "tags": [
+    "Web redesign"
+   ]
+  }
+ ],
+ "systems": [
+  {
+   "name": "Frank",
+   "what": "Content-operations system: ingests footage, cuts licensed clips with burned-in captions, and renders branded posts per client, with a publish gate that fails closed."
+  },
+  {
+   "name": "Billings",
+   "what": "Private ops dashboard with a voice console that runs on a local neural voice, so nothing leaves the machine."
+  },
+  {
+   "name": "Tooling",
+   "what": "Python scripts for invoicing, lead tracking, weekly scoreboards and Instagram account analysis."
+  }
+ ]
+}

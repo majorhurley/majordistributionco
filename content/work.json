@@ -1,0 +1,33 @@
+{
+ "_doc": "Boss's pick (2026-10-22): which media pieces /work shows, in manifest order. Picked with the local picker; no file = every piece. build.mjs reads it.",
+ "pieces": [
+  "gv-oc-before-after",
+  "gv-ailton-offer",
+  "gv-tustin-transformation",
+  "gv-tustin-shop-intro",
+  "gv-drew-intro",
+  "gv-exterior",
+  "gv-interior-2",
+  "gv-exterior-2",
+  "md-pato-loco-canning",
+  "md-ipa-pop",
+  "md-quick-hitter",
+  "md-hero-cans",
+  "md-pato-rock",
+  "md-mo-haze-gorge",
+  "md-river-pair",
+  "md-mo-haze-river",
+  "cafe-wang-promo",
+  "peacepal-1",
+  "peacepal-4",
+  "gv-headshot-new-barber",
+  "gv-headshot-allenblendz",
+  "gv-headshot-parceritoblendz",
+  "gv-headshot-vidablendz",
+  "gv-headshot-george",
+  "gv-headshot-lvl-up",
+  "md-event-keg",
+  "photo-back-2-back",
+  "photo-stairs"
+ ]
+}

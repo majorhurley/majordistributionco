@@ -1,0 +1,36 @@
+{
+  "_doc": "Homepage library (Boss, 2026-10-22): one scattered field of small pieces on white, after the Simon Wheatley portfolio pin. Order = placement order (row by row, with some empty cells). Marketing media only (no designs, website or storefront product shots), every piece vertical, no two consecutive pieces from one client. Validated by scripts/build-home.mjs; positions are seeded there. `native` = ids shown in their own shape (not the vertical crop).",
+  "pieces": [
+    "gv-oc-before-after",
+    "md-pato-loco-canning",
+    "gv-exterior",
+    "peacepal-1",
+    "gv-ailton-offer",
+    "md-pato-rock",
+    "gv-interior-2",
+    "md-ipa-pop",
+    "gv-tustin-transformation",
+    "md-mo-haze-gorge",
+    "gv-drew-intro",
+    "cafe-wang-promo",
+    "gv-headshot-parceritoblendz",
+    "md-hero-cans",
+    "gv-tustin-shop-intro",
+    "md-river-pair",
+    "gv-exterior-2",
+    "md-quick-hitter",
+    "gv-headshot-lvl-up",
+    "peacepal-4",
+    "md-mo-haze-river",
+    "gv-headshot-new-barber",
+    "photo-stairs",
+    "gv-headshot-allenblendz",
+    "md-event-keg",
+    "gv-headshot-vidablendz",
+    "photo-back-2-back",
+    "gv-headshot-george"
+  ],
+  "native": [
+    "cafe-wang-promo"
+  ]
+}
