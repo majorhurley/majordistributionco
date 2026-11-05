@@ -8,7 +8,7 @@
     "test": "node tests/smoke.mjs && node tests/headers.mjs",
     "shots": "node scripts/shots.mjs",
     "og": "node scripts/og.mjs",
-    "gaps": "node scripts/gap-check.mjs"
+    "gaps": "node scripts/gap-check.mjs && node scripts/hover-check.mjs"
   },
   "devDependencies": {
     "playwright": "1.56.1"

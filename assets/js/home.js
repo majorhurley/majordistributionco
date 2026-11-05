@@ -220,8 +220,13 @@
     dropTimer = 0;
   function lift(t) {
     if (!FX) return;
+    // A drop still settling (dropTimer) would have shown its piece again;
+    // cancelling it must not leave that piece hidden, so every other piece
+    // is shown here.
     clearTimeout(dropTimer);
-    if (lifted && lifted !== t) lifted.classList.remove("lifted");
+    tiles.forEach(function (o) {
+      if (o !== t) o.classList.remove("lifted");
+    });
     lifted = t;
     var sr = stage.getBoundingClientRect(),
       r = t.getBoundingClientRect();
