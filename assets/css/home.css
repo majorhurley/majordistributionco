@@ -219,24 +219,28 @@ p.lib-c { cursor: default; }
 }
 
 /* Portrait screens (phones): a tall 3D field you scroll through (build-home
-   PHONE_H; Boss, 2026-11-02: spaced out, same 3D as the computer). The stage
-   is sized from the width, so the build's layout is exact on every phone.
-   --px/--py/--pw are % of the field, unprojected for depth --z; home.js
-   moves the camera's vertical origin (--poy) with the screen, so the planes
-   slide past each other as the page scrolls. Without JS each piece is
-   scaled flat (--ps) to the same spot. No hover; taps open the viewer. */
+   PHONE_H; Boss, 2026-11-05: packed, no gaps, firmly on the 3D design). The
+   stage is sized from the width, so the build's layout is exact on every
+   phone. Three packed columns, each on its own depth plane (--pz); --px/--py/
+   --pw are already unprojected for it. home.js moves the camera's vertical
+   origin (--poy) with the screen, so the columns slide past each other as
+   the page scrolls; a column's pieces share one depth, so they never part.
+   Without JS the columns lie flat (--qx/--qy/--qw). No hover; taps open the
+   viewer. */
 @media (max-aspect-ratio: 1/1) {
   .stage { height: calc(100vw * var(--phone-h, 4)); min-height: 0; }
   .fx .stage { perspective-origin: 50% var(--poy, 50%); }
-  .st { left: var(--px); top: var(--py); width: var(--pw); transform-origin: 50% 50%; transform: scale(var(--ps, 1)); }
-  .fx .st { transform: translateZ(var(--pz, 0px)); }
+  .st { left: var(--qx); top: var(--qy); width: var(--qw); transform: none; }
+  .fx .st { left: var(--px); top: var(--py); width: var(--pw); transform-origin: 50% 50%;
+    transform: translateZ(var(--pz, 0px)); backface-visibility: hidden; }
+  /* A piece still loading shows a tone, never a hole in the field. */
+  .st { background: color-mix(in srgb, var(--lib-fg) 8%, transparent); }
   /* Taps go to the stage (home.js finds the piece), not 3D hit-testing. */
   .fx .lib .st { pointer-events: none; }
   .fx .stage { cursor: pointer; }
   .st.echo { display: none; }
-  /* The title sits in the middle of the first screen; the corner labels
-     stay with the top and bottom of the field. */
-  .lib-title { top: calc(100vw * 0.92); }
+  /* The title sits right under the top labels; the columns start under it. */
+  .lib-title { top: 64px; }
   /* The field is taller than the screen: give its bottom a snap point too,
      or the page snaps from the middle of it straight to services. */
   .stage::after { content: ""; position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; scroll-snap-align: end; }

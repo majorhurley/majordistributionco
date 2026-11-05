@@ -182,19 +182,70 @@ const layout = ({ W, H, inset, title, cover, seed, gap, list = nodes, tc = [W / 
 };
 // Landscape: ~1.75:1 under the header.
 const LAND = layout({ W: 175, H: 100, inset: [9, 7, 9, 9], title: [44, 11], cover: 0.36, seed: 2026, gap: 1.3 });
-// Phones (Boss, 2026-11-02: "more spaced out, with the 3D design we use on
-// computer"): the field is PHONE_H screen-widths tall (home.css sizes the
-// stage from the width, so this layout is exact on every phone) and scrolls
-// through. Real pieces only (echoes would shrink below a tappable size), at
-// their depths, with wide gaps. home.js moves the camera's vertical origin
-// with the screen, so near and far planes slide past each other as you
-// scroll; with JS off each piece is scaled flat to the same spot.
-// The title sits in the middle of the first screen (~1.9 widths tall).
-const PHONE_H = 430;
-const PHONE_ZK = 0.45; // phones: depth compressed, so the scroll parallax stays gentle
+// Phones (Boss, 2026-11-05: "media not showing, gaps in the gallery: put it
+// all firmly on the 3D design"): a packed three-column masonry, each column on
+// its own depth plane (left far, middle near, right between). home.js moves
+// the camera's vertical origin with the screen, so the columns slide past
+// each other as you scroll; inside a column every piece shares one depth, so
+// none can drift into a neighbour or open a hole. Each column's spacing is
+// solved so it starts flush under the title when the gallery arrives and ends
+// flush on the bottom labels when it leaves. Units: screen-widths x100, so the
+// layout is exact on every phone (home.css sizes the stage from the width).
+// PH_M: the camera's height above the field's top at arrival (half a phone
+// screen under the 77px header). Real pieces only: echoes would be too small
+// to tap. With JS off (--q*), the columns lie flat in the same places.
+const PH_COLS = [
+  { x: 3, w: 28.5, z: -150 },
+  { x: 34, w: 32, z: 60 },
+  { x: 68.5, w: 28.5, z: -60 },
+];
+const PH_GAP = 2.5, PH_T = 27, PH_B = 13, PH_M = 86, PH_TITLE = 17;
 const real = nodes.filter((n) => !n.echo);
-const portList = layout({ W: 100, H: PHONE_H, inset: [3, 7, 3, 13], title: [66, 13], tc: [50, 92], cover: 0.56, seed: 1102, gap: 3, list: real, zk: PHONE_ZK, slide: 40, ds: (z) => 0.7 + (0.3 * (z - Z_FAR)) / (Z_NEAR - Z_FAR), flatY: true, gatherY: (92 / PHONE_H) * 100 });
-const PORT = nodes.map((n) => (n.echo ? null : portList[real.indexOf(n)]));
+const phCols = PH_COLS.map((c) => {
+  const s = sOf(c.z);
+  return { ...c, s, k: (2 * PH_M - PH_T - PH_B) / s };
+});
+// Field height a column needs for its pieces at the natural gap.
+const needH = (c, list) =>
+  list.reduce((t, n) => t + (c.w / c.s) * n.a, 0) + ((list.length - 1) * PH_GAP) / c.s + 2 * PH_M - c.k;
+let phBest = null;
+for (let seed = 0; seed < 4000; seed++) {
+  const r = rng(5000 + seed);
+  const order = real.map((n, i) => [r(), i]).sort((p, q) => p[0] - q[0]).map(([, i]) => i);
+  const stacks = phCols.map(() => []);
+  for (const i of order) {
+    const n = real[i];
+    // Shortest column first; never the same client twice in a row down a column.
+    const byShort = phCols.map((c, j) => j).sort((p, q) => needH(phCols[p], stacks[p]) - needH(phCols[q], stacks[q]));
+    const j = byShort.find((j) => stacks[j].at(-1)?.m.project !== n.m.project) ?? byShort[0];
+    stacks[j].push(n);
+  }
+  const hs = stacks.map((st, j) => needH(phCols[j], st));
+  const spread = Math.max(...hs) - Math.min(...hs);
+  const clash = stacks.some((st) => st.some((n, k) => k && st[k - 1].m.project === n.m.project));
+  if (!clash && (!phBest || spread < phBest.spread)) phBest = { spread, stacks, hs };
+}
+const PHONE_H = Math.ceil(Math.max(...phBest.hs) * 10) / 10;
+const PORT = new Array(nodes.length).fill(null);
+phBest.stacks.forEach((st, j) => {
+  const c = phCols[j];
+  // Spare height (columns are balanced to within a fraction of a piece) goes
+  // into the gaps, so every column runs exactly top to bottom.
+  const gl = PH_GAP / c.s + (PHONE_H - phBest.hs[j]) / Math.max(1, st.length - 1);
+  const flatLen = st.reduce((t, n) => t + c.w * n.a, 0) + (st.length - 1) * PH_GAP;
+  const f = Math.min(1, (PHONE_H - PH_T - PH_B) / flatLen);
+  let y = PH_M + (PH_T - PH_M) / c.s, qy = PH_T;
+  for (const n of st) {
+    const w = c.w / c.s, h = w * n.a;
+    PORT[nodes.indexOf(n)] = {
+      x: 50 + (c.x - 50) / c.s, y: (y / PHONE_H) * 100, w, z: c.z,
+      qx: c.x + (c.w * (1 - f)) / 2, qy: (qy / PHONE_H) * 100, qw: c.w * f,
+      fx: 50 - (c.x + c.w / 2), fy: ((PH_TITLE - (y + h / 2)) / PHONE_H) * 100,
+    };
+    y += h + gl;
+    qy += (c.w * n.a + PH_GAP) * f;
+  }
+});
 
 const f2 = (n) => n.toFixed(2);
 const piece = (n, i) => {
@@ -202,10 +253,10 @@ const piece = (n, i) => {
   const L = LAND[i], P = PORT[i];
   // Near videos play on their own (home.js), muted, while the field is on screen.
   const auto = !n.echo && m.type === 'video' && n.z > 0;
-  const style = `--z:${n.z.toFixed(0)}px;--x:${f2(L.x)}%;--y:${f2(L.y)}%;--w:${f2(L.w)}%;--o:${L.o};--fx:${f2(L.fx)};--fy:${f2(L.fy)};${P ? `--px:${f2(P.x)}%;--py:${f2(P.y)}%;--pw:${f2(P.w)}%;--ps:${P.s.toFixed(3)};--pz:${(n.z * PHONE_ZK).toFixed(0)}px;--pfx:${f2(P.fx)};--pfy:${f2(P.fy)}` : '--pfx:0;--pfy:0'}`;
+  const style = `--z:${n.z.toFixed(0)}px;--x:${f2(L.x)}%;--y:${f2(L.y)}%;--w:${f2(L.w)}%;--o:${L.o};--fx:${f2(L.fx)};--fy:${f2(L.fy)};${P ? `--px:${f2(P.x)}%;--py:${f2(P.y)}%;--pw:${f2(P.w)}%;--pz:${P.z}px;--qx:${f2(P.qx)}%;--qy:${f2(P.qy)}%;--qw:${f2(P.qw)}%;--pfx:${f2(P.fx)};--pfy:${f2(P.fy)}` : '--pfx:0;--pfy:0'}`;
   const echo = n.echo ? ` echo" aria-hidden="true" tabindex="-1" data-of="${n.of}` : '';
   return `<a class="st${echo}" href="${v.src}" style="${style}"${auto ? ' data-auto="1"' : ''} data-type="${m.type}" data-src="${v.preview || v.src}"${v.preview ? ` data-full="${v.src}"` : ''} data-poster="${n.thumb}" data-w="${v.width}" data-h-px="${v.height}" data-title="${esc(m.title)}" data-client="${esc(client[m.project])}" data-caption="${esc(m.caption || '')}" data-credit="${esc(m.credit || '')}">
-  <img src="${n.thumb}" width="480" height="${Math.round(480 * n.a)}" alt="${n.echo ? '' : `${esc(client[m.project])} — ${esc(m.title)}`}" loading="${i < 24 ? 'eager' : 'lazy'}" decoding="async">
+  <img src="${n.thumb}" width="480" height="${Math.round(480 * n.a)}" alt="${n.echo ? '' : `${esc(client[m.project])} — ${esc(m.title)}`}" ${i < 24 ? '' : 'fetchpriority="low" '}decoding="async">
 </a>`;
 };
 const libHtml = nodes.map(piece).join('\n');
