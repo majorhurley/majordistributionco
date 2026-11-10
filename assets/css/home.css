@@ -623,3 +623,18 @@ body.home {
     display: none;
   }
 }
+
+/* ---------- service area + service links (2026-11-09) ---------- */
+.svc-lede {
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin-top: 12px;
+}
+.svc-tags a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.svc-tags a:hover {
+  color: var(--ink);
+}

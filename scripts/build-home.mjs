@@ -14,6 +14,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { business } from './business.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_URL = process.env.SITE_URL || 'https://www.majordistributionco.com';
@@ -264,9 +265,9 @@ const total = ids.length;
 
 // ---------- services ----------
 const services = [
-  { n: '01', name: 'Content creation', body: 'We shoot, edit and deliver content that stops the scroll: video ads, product photography, Reels and brand visuals.', tags: ['Video ads', 'Product photography', 'Reels & short-form', 'Brand visuals'] },
-  { n: '02', name: 'Ad campaigns', body: 'Paid ads that work as hard as the content looks. We build the creative, target the right people and put every dollar where it pays.', tags: ['Meta ads', 'Google ads', 'Creative strategy', 'Retargeting'] },
-  { n: '03', name: 'Websites', body: 'Fast, mobile-first sites built around your brand, so the people the ads bring in stay and buy.', tags: ['Custom design', 'Online stores', 'Lead capture', 'Care plans'] },
+  { n: '01', name: 'Content creation', body: 'We shoot, edit and deliver content that stops the scroll: video ads, product photography, Reels and brand visuals.', tags: [['Video ads', '/services/video-ads'], ['Product photography', '/services/product-photography'], ['Reels & short-form', '/services/social-media'], 'Brand visuals'] },
+  { n: '02', name: 'Ad campaigns', body: 'Paid ads that work as hard as the content looks. We build the creative, target the right people and put every dollar where it pays.', tags: [['Meta ads', '/services/video-ads'], 'Google ads', 'Creative strategy', 'Retargeting'] },
+  { n: '03', name: 'Websites', body: 'Fast, mobile-first sites built around your brand, so the people the ads bring in stay and buy.', tags: [['Custom design', '/services/websites'], ['Online stores', '/services/websites'], 'Lead capture', 'Care plans'] },
 ];
 
 const html = `<!DOCTYPE html>
@@ -274,8 +275,8 @@ const html = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Major Distribution — Can't Buy What You Can't See</title>
-<meta name="description" content="Major Distribution makes marketing media for local brands: video ads, product photography, Reels and the campaigns that put them in front of buyers.">
+<title>Video Ads, Photos &amp; Websites — La Verne &amp; LA | Major Distribution</title>
+<meta name="description" content="Video ads, product photography, social media and websites for local businesses in La Verne, the San Gabriel Valley, Los Angeles and Orange County.">
 <link rel="canonical" href="${SITE_URL}">
 ${NOINDEX ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<meta property="og:type" content="website">
 <meta property="og:title" content="Major Distribution — Can't Buy What You Can't See">
@@ -292,7 +293,7 @@ ${NOINDEX ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<meta prop
 <link rel="stylesheet" href="/assets/css/home.css">
 <script src="/assets/js/home-mark.js"></script>
 <script src="/assets/js/home.js" defer></script>
-${ld({ '@context': 'https://schema.org', '@type': 'LocalBusiness', name: 'Major Distribution', url: SITE_URL, slogan: "Can't buy what you can't see.", areaServed: 'California' })}
+${ld(business(SITE_URL))}
 </head>
 <body class="home">
 <a class="skip" href="#main">Skip to content</a>
@@ -340,12 +341,13 @@ ${libHtml}
   <div class="svc-head rv">
     <p class="mono">What we do</p>
     <h2 id="svc-h">Made to be seen.</h2>
+    <p class="svc-lede">Marketing media for local businesses, from our base in La Verne to the San Gabriel Valley, Los Angeles and Orange County.</p>
   </div>
   <ol class="svc">
 ${services.map((s, i) => `    <li class="svc-row rv" style="--d:${i * 90}ms">
       <span class="svc-n">${s.n}</span>
       <div><h3>${s.name}</h3><p>${s.body}</p></div>
-      <ul class="svc-tags">${s.tags.map((t) => `<li>${t}</li>`).join('')}</ul>
+      <ul class="svc-tags">${s.tags.map((t) => (Array.isArray(t) ? `<li><a href="${t[1]}">${esc(t[0])}</a></li>` : `<li>${esc(t)}</li>`)).join('')}</ul>
     </li>`).join('\n')}
   </ol>
 </section>

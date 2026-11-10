@@ -8,7 +8,8 @@ import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const PAGES = ['index.html', 'work.html', 'resume.html'].filter((f) => existsSync(join(ROOT, f)));
+const sub = (d) => (existsSync(join(ROOT, d)) ? readdirSync(join(ROOT, d)).filter((f) => f.endsWith('.html')).map((f) => `${d}/${f}`) : []);
+const PAGES = ['index.html', 'work.html', 'resume.html', ...sub('services'), ...sub('work')].filter((f) => existsSync(join(ROOT, f)));
 const used = new Set();
 for (const f of PAGES) for (const m of readFileSync(join(ROOT, f), 'utf8').matchAll(/media\/[\w./-]+\.\w+/g)) used.add(m[0]);
 const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));

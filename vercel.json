@@ -59,6 +59,17 @@
   ],
   "redirects": [
     {
+      "source": "/:path(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "majordistributionco.com"
+        }
+      ],
+      "destination": "https://www.majordistributionco.com/:path",
+      "permanent": true
+    },
+    {
       "source": "/resume",
       "destination": "/work",
       "permanent": false

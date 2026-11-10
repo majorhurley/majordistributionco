@@ -1,0 +1,194 @@
+{
+  "_doc": "Service pages (/services/<slug>), built by scripts/build.mjs. Every claim must be true and checkable against content/projects.json: no invented metrics, prices or turnaround promises. `projects` + `kinds` pick which /work pieces show (only pieces already in content/work.json). Service area lives in scripts/business.mjs.",
+  "services": [
+    {
+      "slug": "video-ads",
+      "name": "Video ads",
+      "title": "Video Ads & Reels Ads for Local Businesses — La Verne & LA | Major Distribution",
+      "description": "Meta and Reels video ads for local businesses in La Verne, the San Gabriel Valley, Los Angeles and Orange County. Shot on location, cut vertical, captioned, ready to run.",
+      "h1": "Video ads",
+      "lede": "Vertical video ads for Meta, Instagram Reels and TikTok, shot at your business and cut to stop the scroll.",
+      "sections": [
+        {
+          "h": "What you get",
+          "p": "We come to your shop, restaurant or brewery and shoot the real thing: the work, the product, the people who do it. Then we cut it into short vertical ads with captions held clear of the Reels and TikTok buttons, licensed music, and an offer graphic when the ad needs one. You get finished files ready to upload to Meta Ads Manager or post organically."
+        },
+        {
+          "h": "Shot where you work",
+          "p": "Stock footage doesn't sell a haircut or a pint. For Golden Vision Barbershop we filmed on the floor at both locations, Santa Ana and Tustin: real cuts, before-and-after transformations, and barbers talking straight to camera. For Mad Duck Craft Brewing we filmed the canning line. For Cafe Wang in La Verne we shot a 4K promo film in the restaurant itself: the wok, the plates, the room and the storefront."
+        },
+        {
+          "h": "Cut for the feed",
+          "p": "People decide in the first second whether to keep watching, so every ad opens on the strongest moment. Ads run roughly 15 to 30 seconds, with on-screen captions for people watching muted. When the location audio is noisy we clean the dialogue off the background music with stem separation, then score the cut with a licensed track."
+        },
+        {
+          "h": "Offers that convert",
+          "p": "An ad without a reason to act is just a video. We design first-time-customer offer graphics into the edit. Golden Vision ran a $35 first cut in Santa Ana and $45 in Tustin, so each location's ad carried its own price."
+        },
+        {
+          "h": "Where we work",
+          "p": "We're based in La Verne and shoot across Pomona, Claremont, San Dimas, the San Gabriel Valley, Los Angeles and Orange County."
+        }
+      ],
+      "projects": ["golden-vision", "mad-duck", "cafe-wang"],
+      "kinds": ["ad", "video"],
+      "faq": [
+        {
+          "q": "Do you run the ads too, or only make them?",
+          "a": "We make the creative and hand over finished files sized for each placement. If you want help putting them in front of the right people, ask about campaign setup when you get in touch."
+        },
+        {
+          "q": "Which platforms are the ads made for?",
+          "a": "Meta (Facebook and Instagram, including Reels and Stories) and TikTok. We deliver vertical by default, and 16:9 versions when a placement needs them."
+        },
+        {
+          "q": "Do you come to our location?",
+          "a": "Yes. Every shoot happens at your business, anywhere from La Verne and the San Gabriel Valley to Los Angeles and Orange County."
+        },
+        {
+          "q": "Is the music licensed?",
+          "a": "Yes. We score ads with licensed tracks, so they can run as paid ads without copyright strikes."
+        }
+      ]
+    },
+    {
+      "slug": "product-photography",
+      "name": "Product photography",
+      "title": "Product Photography for Local Brands — La Verne & LA | Major Distribution",
+      "description": "Product and brand photography for local businesses in La Verne, Pomona, Claremont, Los Angeles and Orange County: on location or on a clean background, edited from RAW.",
+      "h1": "Product photography",
+      "lede": "Product and brand photos that make people want the thing, shot on location or on a clean background and edited from RAW.",
+      "sections": [
+        {
+          "h": "What you get",
+          "p": "A shoot planned around where the photos will live: your Instagram grid, your online store, ads, menus or print. We shoot on a Sony body, edit every frame from RAW, and deliver a post-ready set in the sizes you need, from square feed posts to vertical stories to wide web banners."
+        },
+        {
+          "h": "On location",
+          "p": "Some products sell the place they come from. For Mad Duck Craft Brewing we took the cans outdoors, across hills, a river and a gorge, and edited the shoot into a rollout set the brewery could post over weeks."
+        },
+        {
+          "h": "Studio and clean background",
+          "p": "When the product needs to stand on its own, we shoot it clean. For PeacePal we ran a studio shoot against a flag backdrop and a set of clean-background product shots, then built a wordmark and product graphic on top of the photography."
+        },
+        {
+          "h": "People and portraits",
+          "p": "Brands are people too. We shot staff headshots for the barbers at Golden Vision Barbershop, made to match across the team so the shop could use them on social and its booking pages."
+        },
+        {
+          "h": "Where we work",
+          "p": "We're based in La Verne and shoot across Pomona, Claremont, San Dimas, the San Gabriel Valley, Los Angeles and Orange County."
+        }
+      ],
+      "projects": ["mad-duck", "peacepal", "golden-vision"],
+      "kinds": ["photo"],
+      "faq": [
+        {
+          "q": "Can you shoot at our business?",
+          "a": "Yes. Most shoots happen at your location or somewhere that fits the product. We bring what we need for a clean background when the product calls for one."
+        },
+        {
+          "q": "Do we get edited photos or raw files?",
+          "a": "Edited photos, exported in the sizes you'll actually use. Every frame is edited from RAW."
+        },
+        {
+          "q": "Can the same shoot cover photos and video?",
+          "a": "Yes, and it usually should. One visit can produce product stills, Reels and ad footage, which keeps your feed consistent and saves a second shoot."
+        }
+      ]
+    },
+    {
+      "slug": "social-media",
+      "name": "Social media management",
+      "title": "Instagram & TikTok Management for Local Businesses | Major Distribution",
+      "description": "Instagram and TikTok management for restaurants, breweries and local brands in La Verne and LA: original weekly content, captions and a posting calendar.",
+      "h1": "Social media management",
+      "lede": "We run your Instagram and TikTok: original content every week, written captions and a calendar, so your feed never goes quiet.",
+      "sections": [
+        {
+          "h": "What you get",
+          "p": "A monthly plan that keeps your accounts active with original content, not reposts. That means shooting at your business, editing Reels, static posts and carousels, writing captions and hashtags for every piece, and scheduling it all on a weekly posting calendar."
+        },
+        {
+          "h": "Original content every week",
+          "p": "For Cafe Wang, a Chinese fusion restaurant in La Verne, the plan was two original pieces a week across Reels, static posts and carousels, opened with a promo film shot in the restaurant. Every piece came with its caption, hashtags and a slot on the calendar."
+        },
+        {
+          "h": "Account management and reporting",
+          "p": "For Mad Duck Craft Brewing we managed the @madduckcraft Instagram, an account of about 9,300 followers, and built performance reporting so the brewery could see what was working. Around it we made a canning-line commercial with short cutdowns for TikTok and Reels, a 12-post TikTok and Reels plan with hooks, captions and shot notes, and post and story designs."
+        },
+        {
+          "h": "Built from your own footage",
+          "p": "Because we shoot the content ourselves, every post looks like your business. It's your food, your product, your staff. One shoot day feeds weeks of posts."
+        },
+        {
+          "h": "Where we work",
+          "p": "We're based in La Verne and work with businesses across Pomona, Claremont, San Dimas, the San Gabriel Valley, Los Angeles and Orange County."
+        }
+      ],
+      "projects": ["cafe-wang", "mad-duck"],
+      "kinds": [],
+      "faq": [
+        {
+          "q": "Which platforms do you manage?",
+          "a": "Instagram and TikTok, including Reels, static posts, carousels and stories."
+        },
+        {
+          "q": "Do you write the captions?",
+          "a": "Yes. Every piece comes with a written caption, hashtags and a date on the posting calendar."
+        },
+        {
+          "q": "Do we need to send you content?",
+          "a": "No. We shoot it at your business. If you have photos or clips of your own, we'll work them in too."
+        }
+      ]
+    },
+    {
+      "slug": "websites",
+      "name": "Websites",
+      "title": "Websites & Online Stores for Local Businesses — La Verne & LA | Major Distribution",
+      "description": "Fast, mobile-first websites and online stores for local businesses in La Verne, Los Angeles and Orange County, with payments, email capture and SEO built in.",
+      "h1": "Websites",
+      "lede": "Fast, mobile-first websites and online stores, so the people your ads bring in stay and buy.",
+      "sections": [
+        {
+          "h": "What you get",
+          "p": "A custom site designed around your brand and built to load fast on a phone, where most of your visitors are. Every build includes search basics (titles, descriptions, structured data, a sitemap), security headers, and a contact or quote form that reaches you."
+        },
+        {
+          "h": "Online stores that take real payments",
+          "p": "For Amor, a Los Angeles brand, we built an online store from nothing to live: storefront, product pages and a mobile checkout taking real card payments through Stripe. It also has email capture with a confirmation flow, a welcome-offer popup, and seller tools for orders, fulfilment, shipping labels and tracking."
+        },
+        {
+          "h": "Checked before launch",
+          "p": "Before a site goes live we run a launch audit covering security headers, mobile layouts at real phone widths, broken links and an SEO pass. Amor launched after exactly that checklist."
+        },
+        {
+          "h": "Made to work with your marketing",
+          "p": "A website is where your ads and posts send people. We build it alongside your content, so the photos and video on the site are the same ones in your feed, and every page gives a visitor one clear next step."
+        },
+        {
+          "h": "Where we work",
+          "p": "We're based in La Verne and build sites for businesses across Pomona, Claremont, San Dimas, the San Gabriel Valley, Los Angeles and Orange County."
+        }
+      ],
+      "projects": [],
+      "kinds": [],
+      "live": { "url": "https://shopamorla.com", "label": "shopamorla.com" },
+      "faq": [
+        {
+          "q": "Can you build an online store?",
+          "a": "Yes. Amor's store takes live card payments through Stripe, with order and shipping tools behind it."
+        },
+        {
+          "q": "Will the site work on phones?",
+          "a": "Every layout is designed for phones first and checked at real phone widths before launch."
+        },
+        {
+          "q": "Do you handle SEO?",
+          "a": "Every build ships with the search basics: page titles and descriptions, structured data, a sitemap and fast load times."
+        }
+      ]
+    }
+  ]
+}

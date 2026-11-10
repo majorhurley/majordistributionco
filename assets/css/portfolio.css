@@ -1260,3 +1260,104 @@ a:not(.btn):not(.brand):not(.tile):hover {
     padding: 10px 12px;
   }
 }
+
+/* ---------- services + case studies (2026-11-09) ---------- */
+.crumbs {
+  color: var(--ink-3);
+  font-size: 0.72rem;
+  margin-bottom: 18px;
+}
+.crumbs a {
+  color: inherit;
+}
+.crumbs a:hover {
+  color: var(--ink);
+}
+.w-head .actions {
+  margin-bottom: 8px;
+}
+.w-cases {
+  color: var(--ink-3);
+  font-size: 0.74rem;
+  margin: -12px 0 22px;
+}
+.w-cases a {
+  color: var(--ink-2);
+}
+.row h2 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  grid-row: span 2;
+}
+.row h3 a,
+.row p a:not(.arrow) {
+  color: inherit;
+}
+.row .did {
+  margin: 0;
+}
+.s-work {
+  padding-top: clamp(40px, 6vw, 80px);
+}
+.s-work .grid {
+  margin-top: 22px;
+}
+.faq {
+  padding: clamp(40px, 6vw, 80px) 0 0;
+}
+.faq-list {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.faq details {
+  border-bottom: 1px solid var(--rule);
+}
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 18px 0;
+  min-height: 44px;
+}
+.faq details p {
+  color: var(--ink-2);
+  max-width: 70ch;
+  padding-bottom: 18px;
+}
+.s-cta {
+  max-width: var(--max);
+  margin: clamp(56px, 8vw, 112px) auto 0;
+  padding: clamp(40px, 6vw, 72px) var(--gutter);
+  background: var(--charcoal);
+  border-radius: 4px;
+  text-align: center;
+}
+.s-cta .mono {
+  color: var(--ink-3);
+}
+.s-cta h2 {
+  font: 400 clamp(1.56rem, 4.6vw, 3.4rem)/0.95 var(--font-display);
+  text-transform: uppercase;
+  margin: 10px 0 24px;
+}
+.s-cta .actions {
+  justify-content: center;
+}
+.foot .foot-svc {
+  flex-basis: 100%;
+  order: 3;
+}
+.foot .foot-svc a {
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+@media (max-width: 640px) {
+  .s-cta {
+    border-radius: 0;
+  }
+}
+/* Subpage h1s are single long words ("Photography") in the wide display cut:
+   a lower floor keeps them inside 320px screens. */
+.w-head.sub h1 {
+  font-size: clamp(1.6rem, 7.28vw, 5.72rem);
+}

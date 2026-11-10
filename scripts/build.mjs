@@ -4,14 +4,15 @@
 //
 // Inputs:  media/manifest.json   (built by ~/.claude/major-distributions/portfolio/build_media.py)
 //          content/projects.json (project copy)
-// Outputs: resume.html, work.html, sitemap.xml, robots.txt. (index.html is
-//          scripts/build-home.mjs.)
+// Outputs: resume.html, work.html, services/<slug>.html, work/<project>.html,
+//          sitemap.xml, robots.txt. (index.html is scripts/build-home.mjs.)
 //
 // Everything is pre-rendered so both pages read fully with JavaScript off;
 // assets/js/portfolio.js only adds filters, the lightbox and motion.
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, unlinkSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { areaServed, business, businessId } from './business.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE_URL = process.env.SITE_URL || 'https://www.majordistributionco.com';
@@ -22,11 +23,12 @@ const CONTACT_URL = '/#contact';
 const LINKEDIN = 'https://www.linkedin.com/in/major-hurley';
 // Boss, 2026-10-27: resume off for now. false = no resume.html, no links, /resume redirects (vercel.json).
 const SHOW_RESUME = false;
-const UPDATED = '2026-10-27'; // bump when page content changes; feeds sitemap lastmod
+const UPDATED = '2026-11-09'; // bump when page content changes; feeds sitemap lastmod
 
 const read = (p) => JSON.parse(readFileSync(join(ROOT, p), 'utf8'));
 const { items } = read('media/manifest.json');
 const { projects, systems } = read('content/projects.json');
+const { services } = read('content/services.json');
 const media = items.filter((m) => !m.hold);
 const byProject = (id) => media.filter((m) => m.project === id);
 const projectById = Object.fromEntries(projects.map((p) => [p.id, p]));
@@ -71,13 +73,7 @@ ${NOINDEX ? '<meta name="robots" content="noindex, nofollow">\n' : ''}<meta prop
 <script src="/assets/js/mark.js"></script>
 <script src="/assets/js/portfolio.js" defer></script>
 ${[
-    ld({
-      '@context': 'https://schema.org',
-      '@type': 'LocalBusiness',
-      name: 'Major Distribution',
-      url: SITE_URL,
-      areaServed: 'California',
-    }),
+    ld(business(SITE_URL)),
     ...extraLd,
   ].join('\n')}
 </head>`;
@@ -90,6 +86,7 @@ function topbar(active) {
   <a class="brand" href="/" aria-label="Major Distribution home"><img src="/assets/brand/md-wordmark.png" alt="Major Distribution logo" width="434" height="144"></a>
   <nav aria-label="Main">
     ${SHOW_RESUME ? link('/resume', 'Resume', 'resume') : ''}
+    <a href="/#services"${active === 'services' ? ' aria-current="page"' : ''}>Services</a>
     ${link('/work', 'Work', 'work')}
     <a class="btn btn-red btn-sm magnet" href="/#contact">Start a project</a>
   </nav>
@@ -104,8 +101,26 @@ const footer = `<footer class="foot">
     <li><a href="/work">Work</a></li>
     <li><a href="${CONTACT_URL}">Contact</a></li>
   </ul>
+  <ul class="foot-svc" aria-label="Services">
+    ${services.map((s) => `<li><a href="/services/${s.slug}">${esc(s.name)}</a></li>`).join('\n    ')}
+  </ul>
   <p class="mono">© 2026 Major Distribution</p>
 </footer>`;
+
+// The viewer portfolio.js opens tiles in (/work, services, case studies).
+const LIGHTBOX = `<dialog class="lb" id="lb" aria-label="Viewer">
+  <div class="lb-stage" id="lb-stage"></div>
+  <div class="lb-info">
+    <p class="mono" id="lb-n"></p>
+    <h2 id="lb-title"></h2>
+    <p id="lb-client" class="lb-client"></p>
+    <p id="lb-caption"></p>
+    <p id="lb-credit" class="mono lb-credit"></p>
+  </div>
+  <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close">×</button>
+  <button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous">‹</button>
+  <button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next">›</button>
+</dialog>`;
 
 // ---------- media rendering ----------
 function mediaEl(m, { autoplay = false, sizes = '(max-width: 700px) 92vw, 33vw', eager = false } = {}) {
@@ -317,6 +332,7 @@ ${topbar('work')}
   <p class="mono kicker rv">${media.length} pieces · ${projects.filter((p) => !p.personal).length} brands · 2026</p>
   <h1 class="rv" style="--d:80ms">The work</h1>
   <p class="lede rv" style="--d:160ms">Ads, short-form video, photography, designs and websites. Tap any piece to open it.</p>
+  <p class="mono w-cases rv" style="--d:200ms">Case studies: ${cases.map((p) => `<a href="/work/${p.id}">${esc(p.client)}</a>`).join(' · ')}</p>
   <div class="filters rv" style="--d:240ms" role="group" aria-label="Filter by type">
     <button type="button" class="chip-btn" aria-pressed="true" data-filter-kind="all">All <span>${media.length}</span></button>
     ${kinds.map((k) => `<button type="button" class="chip-btn" aria-pressed="false" data-filter-kind="${k}">${KIND_LABEL[k]}s <span>${media.filter((m) => m.kind === k).length}</span></button>`).join('\n    ')}
@@ -332,19 +348,161 @@ ${sorted.map((m, i) => tile(m, i, { eager: i < 6 })).join('\n')}
 </section>
 <p class="empty mono" id="empty" hidden>Nothing here yet for that filter.</p>
 </main>
-<dialog class="lb" id="lb" aria-label="Viewer">
-  <div class="lb-stage" id="lb-stage"></div>
-  <div class="lb-info">
-    <p class="mono" id="lb-n"></p>
-    <h2 id="lb-title"></h2>
-    <p id="lb-client" class="lb-client"></p>
-    <p id="lb-caption"></p>
-    <p id="lb-credit" class="mono lb-credit"></p>
+${LIGHTBOX}
+${footer}
+</body>
+</html>
+`;
+}
+
+// ---------- shared pieces for services + case studies ----------
+const crumbsLd = (trail) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map(([name, path], i) => ({ '@type': 'ListItem', position: i + 1, name, item: SITE_URL + path })),
+});
+const cases = projects.filter((p) => p.case_intro && workMedia.some((m) => m.project === p.id));
+const AREA_LINE = 'La Verne, Los Angeles &amp; Orange County';
+
+// A tile gallery portfolio.js can drive (lightbox) without the /work filters.
+function gallery(pieces, label) {
+  return `<section class="grid" id="grid" aria-label="${esc(label)}">
+${pieces.map((m, i) => tile(m, i)).join('\n')}
+</section>
+<p class="mono count" id="count" hidden></p>
+<p class="empty mono" id="empty" hidden>Nothing here yet.</p>`;
+}
+
+const ctaBlock = (line) => `<section class="s-cta" aria-labelledby="s-cta-h">
+  <p class="mono">Based in La Verne · working across LA &amp; Orange County</p>
+  <h2 id="s-cta-h">${line}</h2>
+  <div class="actions"><a class="btn btn-red magnet" href="${CONTACT_URL}">Start a project</a><a class="btn btn-line magnet" href="/work">See all the work</a></div>
+</section>`;
+
+// ---------- /services/<slug> ----------
+function servicePage(s) {
+  const pieces = workMedia.filter((m) => s.projects.includes(m.project) && (!s.kinds.length || s.kinds.includes(m.kind)));
+  const related = cases.filter((p) => s.projects.includes(p.id));
+  const others = services.filter((o) => o.slug !== s.slug);
+  const path = `/services/${s.slug}`;
+  const service = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.name,
+    serviceType: s.name,
+    description: s.description,
+    url: SITE_URL + path,
+    provider: { '@id': businessId(SITE_URL) },
+    areaServed: areaServed(),
+  };
+  const faq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: s.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  };
+  return `${head({
+    title: s.title,
+    description: s.description,
+    path,
+    ogImage: '/assets/brand/og-default.png',
+    extraLd: [ld(service), ld(faq), ld(crumbsLd([['Home', ''], [s.name, path]]))],
+  })}
+<body class="pf">
+<a class="skip" href="#main">Skip to content</a>
+${topbar('services')}
+<main id="main">
+<section class="w-head sub">
+  <nav class="crumbs mono rv" aria-label="Breadcrumb"><a href="/">Home</a> / <span>Services</span></nav>
+  <p class="mono kicker rv">Services · ${AREA_LINE}</p>
+  <h1 class="rv" style="--d:80ms">${esc(s.h1)}</h1>
+  <p class="lede rv" style="--d:160ms">${esc(s.lede)}</p>
+  <div class="actions rv" style="--d:240ms"><a class="btn btn-red magnet" href="${CONTACT_URL}">Start a project</a>${pieces.length ? `<a class="btn btn-line magnet" href="#work">See the work</a>` : ''}</div>
+</section>
+
+<section class="rows" aria-label="${esc(s.name)} in detail">
+  ${s.sections.map((x) => `<div class="row rv"><h2>${esc(x.h)}</h2><p>${esc(x.p)}</p></div>`).join('\n  ')}
+  ${s.live ? `<div class="row rv"><h2>See it live</h2><p><a class="arrow" href="${s.live.url}" rel="noopener">${esc(s.live.label)}</a></p></div>` : ''}
+</section>
+${pieces.length ? `
+<section class="s-work" id="work" aria-labelledby="work-h">
+  <div class="sec-head"><p class="mono">The work</p><h2 id="work-h">${esc(s.name)} we've made</h2></div>
+${gallery(pieces, `${s.name} examples`)}
+</section>` : ''}
+${related.length ? `
+<section class="rows" aria-labelledby="cases-h">
+  <div class="sec-head"><p class="mono">Case studies</p><h2 id="cases-h">Who it was for</h2></div>
+  ${related.map((p) => `<div class="row rv"><h3><a href="/work/${p.id}">${esc(p.client)}</a></h3><p>${esc(p.headline)} <a class="arrow" href="/work/${p.id}">Read the case study</a></p></div>`).join('\n  ')}
+</section>` : ''}
+
+<section class="faq" aria-labelledby="faq-h">
+  <div class="sec-head"><p class="mono">FAQ</p><h2 id="faq-h">Questions</h2></div>
+  <div class="faq-list">
+  ${s.faq.map((f) => `<details class="rv"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('\n  ')}
   </div>
-  <button type="button" class="lb-btn lb-close" id="lb-close" aria-label="Close">×</button>
-  <button type="button" class="lb-btn lb-prev" id="lb-prev" aria-label="Previous">‹</button>
-  <button type="button" class="lb-btn lb-next" id="lb-next" aria-label="Next">›</button>
-</dialog>
+</section>
+
+<section class="rows" aria-labelledby="more-h">
+  <div class="sec-head"><p class="mono">Also</p><h2 id="more-h">More services</h2></div>
+  ${others.map((o) => `<div class="row rv"><h3><a href="/services/${o.slug}">${esc(o.name)}</a></h3><p>${esc(o.lede)}</p></div>`).join('\n  ')}
+</section>
+
+${ctaBlock(`Let's make them see you.`)}
+</main>
+${pieces.length ? LIGHTBOX : ''}
+${footer}
+</body>
+</html>
+`;
+}
+
+// ---------- /work/<project> ----------
+function casePage(p) {
+  const pieces = workMedia.filter((m) => m.project === p.id);
+  const used = services.filter((s) => s.projects.includes(p.id));
+  const path = `/work/${p.id}`;
+  const meta = [p.where, p.when, p.status].filter(Boolean).map(esc).join(' · ');
+  const work = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: `${p.client} — case study`,
+    description: p.headline,
+    url: SITE_URL + path,
+    creator: { '@id': businessId(SITE_URL) },
+    ...(p.where ? { locationCreated: { '@type': 'Place', name: p.where } } : {}),
+  };
+  return `${head({
+    title: `${p.client} — Case Study | Major Distribution`,
+    description: `${p.headline} ${p.where ? `${p.client}, ${p.where}.` : ''} Case study by Major Distribution.`.trim(),
+    path,
+    ogImage: '/media/og-work.jpg',
+    extraLd: [ld(work), ld(crumbsLd([['Home', ''], ['Work', '/work'], [p.client, path]]))],
+  })}
+<body class="pf">
+<a class="skip" href="#main">Skip to content</a>
+${topbar('work')}
+<main id="main">
+<section class="w-head sub">
+  <nav class="crumbs mono rv" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/work">Work</a> / <span>${esc(p.client)}</span></nav>
+  <p class="mono kicker rv">Case study${meta ? ` · ${meta}` : ''}</p>
+  <h1 class="rv" style="--d:80ms">${esc(p.client)}</h1>
+  <p class="lede rv" style="--d:160ms">${esc(p.headline)}</p>
+</section>
+
+<section class="rows" aria-label="The project">
+  <div class="row rv"><h2>The job</h2><p>${esc(p.case_intro)}</p></div>
+  <div class="row rv"><h2>What we did</h2><ul class="did">${p.did.map((d) => `<li>${esc(d)}</li>`).join('')}</ul></div>
+  ${used.length ? `<div class="row rv"><h2>Services</h2><p>${used.map((s) => `<a href="/services/${s.slug}">${esc(s.name)}</a>`).join(' · ')}</p></div>` : ''}
+  ${p.url ? `<div class="row rv"><h2>See it live</h2><p><a class="arrow" href="${p.url}" rel="noopener">${esc(p.url_label || p.url.replace('https://', ''))}</a></p></div>` : ''}
+</section>
+
+<section class="s-work" id="work" aria-labelledby="work-h">
+  <div class="sec-head"><p class="mono">The work</p><h2 id="work-h">${pieces.length} piece${pieces.length > 1 ? 's' : ''}</h2></div>
+${gallery(pieces, `${p.client} work`)}
+</section>
+
+${ctaBlock(`Want work like this?`)}
+</main>
+${LIGHTBOX}
 ${footer}
 </body>
 </html>
@@ -355,11 +513,17 @@ ${footer}
 if (SHOW_RESUME) writeFileSync(join(ROOT, 'resume.html'), resumePage());
 else if (existsSync(join(ROOT, 'resume.html'))) unlinkSync(join(ROOT, 'resume.html'));
 writeFileSync(join(ROOT, 'work.html'), workPage());
+// Subpages are generated whole: wipe first so a removed service or case leaves no orphan page.
+for (const dir of ['services', 'work']) rmSync(join(ROOT, dir), { recursive: true, force: true }), mkdirSync(join(ROOT, dir));
+for (const s of services) writeFileSync(join(ROOT, 'services', `${s.slug}.html`), servicePage(s));
+for (const p of cases) writeFileSync(join(ROOT, 'work', `${p.id}.html`), casePage(p));
 
 const pages = [
   { path: '', lastmod: UPDATED },
   ...(SHOW_RESUME ? [{ path: '/resume', lastmod: UPDATED }] : []),
   { path: '/work', lastmod: UPDATED },
+  ...services.map((s) => ({ path: `/services/${s.slug}`, lastmod: UPDATED })),
+  ...cases.map((p) => ({ path: `/work/${p.id}`, lastmod: UPDATED })),
 ];
 writeFileSync(
   join(ROOT, 'sitemap.xml'),
@@ -371,4 +535,4 @@ writeFileSync(
   join(ROOT, 'robots.txt'),
   NOINDEX ? 'User-agent: *\nDisallow: /\n' : `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`,
 );
-console.log(`built ${SHOW_RESUME ? 'resume.html, ' : '(resume off) '}work.html, sitemap.xml, robots.txt — ${media.length} media items (${items.length - media.length} held) for ${SITE_URL}${NOINDEX ? ' [NOINDEX]' : ''}`);
+console.log(`built ${SHOW_RESUME ? 'resume.html, ' : '(resume off) '}work.html, ${services.length} services, ${cases.length} case studies, sitemap.xml, robots.txt — ${media.length} media items (${items.length - media.length} held) for ${SITE_URL}${NOINDEX ? ' [NOINDEX]' : ''}`);

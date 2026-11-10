@@ -8,6 +8,9 @@ import { start } from '../scripts/serve.mjs';
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = 4175, O = `http://localhost:${PORT}`;
 const { items } = JSON.parse(readFileSync(join(ROOT, 'media/manifest.json'), 'utf8'));
+const { services } = JSON.parse(readFileSync(join(ROOT, 'content/services.json'), 'utf8'));
+const SUB = [...services.map((x) => `/services/${x.slug}`), ...readdirSync(join(ROOT, 'work')).map((f) => `/work/${f.replace(/\.html$/, '')}`)];
+const PAGES = ['/', '/work', ...SUB];
 let fails = 0, checks = 0;
 const ok = (cond, msg) => { checks++; if (!cond) { fails++; console.log('  FAIL', msg); } };
 
@@ -28,7 +31,7 @@ const shipped = readdirSync(join(ROOT, 'media'), { recursive: true }).map(String
 ok(!shipped.some((f) => f.includes('gv-chato')), 'held file gv-chato is inside media/');
 
 // 2. Every local src/href/poster on the three pages resolves.
-for (const page of ['/', '/work']) {
+for (const page of PAGES) {
   const html = await (await fetch(O + page)).text();
   const refs = [...html.matchAll(/(src|href|poster|srcset)="([^"]+)"/g)]
     .filter((x) => !x[2].startsWith('data:'))
@@ -41,7 +44,7 @@ for (const page of ['/', '/work']) {
 }
 
 // 3. Pages: SEO basics, no console errors.
-for (const path of ['/', '/work']) {
+for (const path of PAGES) {
   const p = await b.newPage();
   const errors = [];
   p.on('pageerror', (e) => errors.push(e.message));
@@ -51,8 +54,27 @@ for (const path of ['/', '/work']) {
   ok((await p.locator('h1').count()) === 1, `${path} has exactly one h1`);
   ok((await p.getAttribute('link[rel=canonical]', 'href')) === `https://www.majordistributionco.com${path === '/' ? '' : path}`, `${path} canonical`);
   ok((await p.locator('script[type="application/ld+json"]').count()) >= 1, `${path} JSON-LD`);
+  const lds = (await p.locator('script[type="application/ld+json"]').allTextContents()).map((t) => JSON.parse(t));
+  const biz = lds.find((x) => x['@type'] === 'ProfessionalService');
+  ok(biz && biz.areaServed.some((a) => a.name === 'La Verne, CA') && !biz.telephone && !biz.address, `${path} business schema: service area, no phone/address`);
+  const desc = await p.getAttribute('meta[name=description]', 'content');
+  ok(desc && desc.length >= 70 && desc.length <= 170, `${path} meta description length ${desc?.length}`);
+  const faqN = await p.locator('.faq details').count();
+  if (path.startsWith('/services/')) ok(faqN > 0 && lds.some((x) => x['@type'] === 'FAQPage' && x.mainEntity.length === faqN), `${path} FAQPage matches visible FAQ`);
   await p.waitForTimeout(600);
   ok(errors.length === 0, `${path} console errors: ${errors.join(' | ')}`);
+  await p.close();
+}
+
+// 3b. Service + case-study pages fit a 320px phone (long display-font words).
+{
+  const p = await b.newPage({ viewport: { width: 320, height: 640 } });
+  for (const path of SUB) {
+    await p.goto(O + path, { waitUntil: 'load' });
+    await p.waitForTimeout(300);
+    const sw = await p.evaluate(() => document.documentElement.scrollWidth);
+    ok(sw <= 320, `${path} overflows 320px: scrollWidth ${sw}`);
+  }
   await p.close();
 }
 
@@ -60,7 +82,7 @@ for (const path of ['/', '/work']) {
 {
   const ctx = await b.newContext({ javaScriptEnabled: false });
   const p = await ctx.newPage();
-  for (const path of ['/', '/work']) {
+  for (const path of PAGES) {
     await p.goto(O + path);
     const hidden = await p.evaluate(() => [...document.querySelectorAll('.rv, .tile, .bt, .slogan')].filter((e) => getComputedStyle(e).opacity === '0').length);
     ok(hidden === 0, `${path} JS off: ${hidden} element(s) hidden`);
